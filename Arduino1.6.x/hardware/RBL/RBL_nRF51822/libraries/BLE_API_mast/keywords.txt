@@ -1,0 +1,90 @@
+#######################################
+# Syntax Coloring Map For Ethernet
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+BLEDevice	KEYWORD1
+ble	KEYWORD1
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init	KEYWORD2
+reset	KEYWORD2
+shutdown	KEYWORD2
+setAddress	KEYWORD2
+getAddress	KEYWORD2
+setAdvertisingType	KEYWORD2
+setAdvertisingInterval	KEYWORD2
+getMinAdvertisingInterval	KEYWORD2
+getMinNonConnectableAdvertisingInterval	KEYWORD2
+getMaxAdvertisingInterval	KEYWORD2
+setAdvertisingTimeout	KEYWORD2
+setAdvertisingParams	KEYWORD2
+getAdvertisingParams	KEYWORD2
+setAdvertisingPayload	KEYWORD2
+setAdvertisingData	KEYWORD2
+getAdvertisingData	KEYWORD2
+clearAdvertisingPayload	KEYWORD2
+accumulateAdvertisingPayload	KEYWORD2
+accumulateAdvertisingPayloadTxPower	KEYWORD2
+accumulateScanResponse	KEYWORD2
+clearScanResponse	KEYWORD2
+startAdvertising	KEYWORD2
+stopAdvertising	KEYWORD2
+
+setScanParams	KEYWORD2
+startScan	KEYWORD2
+stopScan	KEYWORD2
+		
+disconnect	KEYWORD2
+onTimeout	KEYWORD2
+onConnection	KEYWORD2
+onDisconnection	KEYWORD2
+
+onDataSent	KEYWORD2
+onDataWritten	KEYWORD2
+onDataRead	KEYWORD2
+
+onUpdatesEnabled	KEYWORD2
+onUpdatesDisabled	KEYWORD2
+onConfirmationReceived	KEYWORD2
+onRadioNotification	KEYWORD2
+
+addService	KEYWORD2  
+getGapState	KEYWORD2
+readCharacteristicValue	KEYWORD2
+updateCharacteristicValue	KEYWORD2
+waitForEvent	KEYWORD2
+
+getPreferredConnectionParams	KEYWORD2
+setPreferredConnectionParams	KEYWORD2
+updateConnectionParams	KEYWORD2
+setDeviceName	KEYWORD2
+getDeviceName	KEYWORD2
+setAppearance	KEYWORD2
+getAppearance	KEYWORD2
+setTxPower	KEYWORD2
+getPermittedTxPowerValues	KEYWORD2
+
+initializeSecurity	KEYWORD2
+onSecuritySetupInitiated	KEYWORD2
+onSecuritySetupCompleted	KEYWORD2
+onLinkSecured	KEYWORD2
+onSecurityContextStored	KEYWORD2
+onPasskeyDisplay	KEYWORD2
+getLinkSecurity	KEYWORD2
+purgeAllBondingState	KEYWORD2
+
+getVersion	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+
