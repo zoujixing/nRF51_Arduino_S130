@@ -14,6 +14,10 @@ ble	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+gattClient	KEYWORD2
+launchServiceDiscovery	KEYWORD2
+terminateServiceDiscovery	KEYWORD2
+
 init	KEYWORD2
 reset	KEYWORD2
 shutdown	KEYWORD2
@@ -50,6 +54,7 @@ onDisconnection	KEYWORD2
 onDataSent	KEYWORD2
 onDataWritten	KEYWORD2
 onDataRead	KEYWORD2
+onHVX	KEYWORD2
 
 onUpdatesEnabled	KEYWORD2
 onUpdatesDisabled	KEYWORD2

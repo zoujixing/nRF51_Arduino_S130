@@ -73,7 +73,7 @@ static void UART0_handler( void )
 name : 
 function : 
 **********************************************************************/
-void UART0_Start(uint32_t BaudRate, uint32_t rx_pin, uint32_t tx_pin )
+void UART0_Start(uint32_t BaudRate, uint8_t rx_pin, uint8_t tx_pin )
 {
 	if( UART0_State != UART0_NotStart )
 	{
@@ -92,8 +92,8 @@ void UART0_Start(uint32_t BaudRate, uint32_t rx_pin, uint32_t tx_pin )
                                     | (GPIO_PIN_CNF_INPUT_Connect << GPIO_PIN_CNF_INPUT_Pos)
                                     | (GPIO_PIN_CNF_DIR_Input << GPIO_PIN_CNF_DIR_Pos);		
 
-	NRF_UART0->PSELTXD = tx_pin;	
-	NRF_UART0->PSELRXD = rx_pin;
+	NRF_UART0->PSELTXD = (uint32_t)tx_pin;	
+	NRF_UART0->PSELRXD = (uint32_t)rx_pin;
 	NRF_UART0->PSELRTS = 0xFFFFFFFF;
     NRF_UART0->PSELCTS = 0xFFFFFFFF;
 	

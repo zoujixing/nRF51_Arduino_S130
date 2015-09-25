@@ -20,16 +20,20 @@ name :
 function : 
 **********************************************************************/
 void UARTClass::begin( const uint32_t BaudRate )
-{	//Use default pin, define on pins_arduino.h
-	UART0_Start( BaudRate, DEFAULT_RX_PIN, DERAULT_TX_PIN );
+{	
+	uint8_t t_pin, r_pin;
+	//transform arduino_pin to nrf51_pin
+	t_pin = Pin_nRF51822_to_Arduino(DERAULT_TX_PIN);
+	r_pin = Pin_nRF51822_to_Arduino(DEFAULT_RX_PIN);
+	UART0_Start( BaudRate, r_pin, t_pin );
 }
 /**********************************************************************
 name :
 function : 
 **********************************************************************/
-void UARTClass::begin(const uint32_t BaudRate, uint32_t rx_pin, uint32_t tx_pin)
+void UARTClass::begin(const uint32_t BaudRate, uint8_t rx_pin, uint8_t tx_pin)
 {	
-	uint32_t t_pin, r_pin;
+	uint8_t t_pin, r_pin;
 	//transform arduino_pin to nrf51_pin
 	t_pin = Pin_nRF51822_to_Arduino(tx_pin);
 	r_pin = Pin_nRF51822_to_Arduino(rx_pin);

@@ -20,7 +20,7 @@
 #include "Gap.h"
 #include "UUID.h"
 #include "GattAttribute.h"
-
+#include "DiscoveredDevice.h"
 #include "GattCharacteristicCallbackParams.h"
 
 class GattClient {
@@ -32,36 +32,37 @@ public:
         GATT_OP_WRITE_CMD = 0x02,  /**< Write Command. */
     };
 	
-	typedef void (*ReadCallback_t)(const GattCharacteristicReadAuthCBParams *params);
+	typedef void (*DiscoveredCallback_t)(const DiscoveredDevice *device);
 	
-    typedef void (*WriteCallback_t)(const GattCharacteristicWriteAuthCBParams *params);
+	typedef void (*ReadCallback_t)(const GattCharacteristicReadCBParams *params);
+	
+    typedef void (*WriteCallback_t)(const GattCharacteristicWriteCBParams *params);
 
     typedef void (*HVXCallback_t)(const GattCharacteristicHVXCallbackParams *params);
+	
+	typedef void (*TerminationCallback_t)(const uint8_t reseason);
 
     /*
      * The following functions are meant to be overridden in the platform-specific sub-class.
      */
 public:
 
-    virtual ble_error_t launchServiceDiscovery(Gap::Handle_t connectionHandle, 
-											   Gap::Handle_t startHandle,
-											   Gap::Handle_t endHandle) {
+    virtual ble_error_t launchServiceDiscovery(Gap::Handle_t connectionHandle, DiscoveredCallback_t callback) {
         /* avoid compiler warnings about unused variables */
         (void)connectionHandle;
-		(void)startHandle;
-		(void)endHandle;
+		(void)(*callback);
 		
         return BLE_ERROR_NOT_IMPLEMENTED; /* Requesting action from porter(s): override this API if this capability is supported. */
     }
 	
-	
-    virtual ble_error_t launchServiceDiscovery(Gap::Handle_t connectionHandle ) {
-        /* avoid compiler warnings about unused variables */
-        (void)connectionHandle;
-		
-        return BLE_ERROR_NOT_IMPLEMENTED; /* Requesting action from porter(s): override this API if this capability is supported. */
+	/**
+     * Setup callback for when serviceDiscovery terminates.
+     */
+    virtual void terminateServiceDiscovery(TerminationCallback_t callback) {
+		(void)callback; 
+        /* default implementation; override this API if this capability is supported. */
     }
-	
+
     /* Initiate a Gatt Client read procedure by attribute-handle. */
     virtual ble_error_t read(Gap::Handle_t connHandle, GattAttribute::Handle_t attributeHandle, uint16_t offset) const {
         /* avoid compiler warnings about unused variables */
@@ -119,7 +120,7 @@ public:
     void onDataWritten(WriteCallback_t callback) {
         onDataWriteCallback = callback;
     }
- /**
+	/**
      * Setup a callback for when GattClient receives an update event
      * corresponding to a change in value of a characteristic on the remote
      * GattServer.
@@ -135,13 +136,13 @@ protected:
 
     /* Entry points for the underlying stack to report events back to the user. */
 public:
-    void processReadResponse(const GattCharacteristicReadAuthCBParams *params) {
+    void processReadResponse(const GattCharacteristicReadCBParams *params) {
         if (onDataReadCallback) {
             onDataReadCallback(params);
         }
     }
 
-    void processWriteResponse(const GattCharacteristicWriteAuthCBParams *params) {
+    void processWriteResponse(const GattCharacteristicWriteCBParams *params) {
         if (onDataWriteCallback) {
             onDataWriteCallback(params);
         }
@@ -154,9 +155,9 @@ public:
     }
 
 protected:
-    ReadCallback_t  onDataReadCallback;
-    WriteCallback_t onDataWriteCallback;
-    HVXCallback_t   onHVXCallback;
+    ReadCallback_t  		onDataReadCallback;
+    WriteCallback_t 		onDataWriteCallback;
+    HVXCallback_t   		onHVXCallback;
 
 private:
     /* disallow copy and assignment */

@@ -17,6 +17,7 @@
 #ifndef __BLE_DEVICE_INSTANCE_BASE__
 #define __BLE_DEVICE_INSTANCE_BASE__
 
+
 /**
  *  The interface for the transport object to be created by the target library's
  *  createBLEDeviceInstance().
@@ -27,6 +28,7 @@ public:
     virtual const char *getVersion(void)           = 0;
     virtual Gap&        getGap()                   = 0;
     virtual GattServer& getGattServer()            = 0;
+	virtual GattClient& getGattClient()			   = 0;
     virtual ble_error_t init(void)                 = 0;
     virtual ble_error_t shutdown(void)             = 0;
     virtual ble_error_t reset(void)                = 0;

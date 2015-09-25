@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-#define RTC1_CYCLE_TIME                      APP_TIMER_TICKS(120000, 0)
+#define RTC1_CYCLE_TIME                      APP_TIMER_TICKS(1000, 0)
 
 static app_timer_id_t                        m_rtc_start_timer_id; 
-
+static uint32_t 							 run_time_in_seconds;
 // widen rtc1 to 40-bit (1099511627775 ticks = 33554431999969us = 388 days)
 // (dont overflow uint64_t when multipying by 1000000)
 extern uint64_t rtc1_overflow_count;
@@ -46,7 +46,7 @@ function :
 **********************************************************************/
 void m_rtc_start_handle(void * p_context)
 {
-	//UNUSED_PARAMETER(p_context);
+	run_time_in_seconds++;
 }
 /**********************************************************************
 name :
@@ -56,7 +56,7 @@ void rtc_timer_init()
 {	
 	uint32_t err_code;
 	//8 timer application, not use scheduler.
-	APP_TIMER_INIT(0, 8, 5);  
+	APP_TIMER_INIT(0, 6, 5);  
 	
 	//m_rtc_start_timer_id task do nothing, just make sure RTC1 is running.
 	err_code = app_timer_create(&m_rtc_start_timer_id,
@@ -64,8 +64,18 @@ void rtc_timer_init()
 					 m_rtc_start_handle);
 	APP_ERROR_CHECK(err_code);
 
+	run_time_in_seconds = 0;
+	
 	err_code = app_timer_start(m_rtc_start_timer_id, RTC1_CYCLE_TIME, NULL);
     APP_ERROR_CHECK(err_code);	
+}
+/**********************************************************************
+name :
+function : 
+**********************************************************************/
+uint32_t getRunTimer(void)
+{
+	return run_time_in_seconds;
 }
 /**********************************************************************
 name :

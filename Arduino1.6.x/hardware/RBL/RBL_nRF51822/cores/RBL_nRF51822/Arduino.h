@@ -33,7 +33,7 @@
 
 #ifdef __cplusplus
 extern "C"{
-#endif // __cplusplus
+#endif 
 
 // Includes Atmel CMSIS
 #include "app_util_platform.h"
@@ -68,20 +68,16 @@ extern void setup( void ) ;
 extern void loop( void ) ;
 
 #ifdef __cplusplus
-} // extern "C"
-
+} 
 
 #include "WString.h"
 #include "Tone.h"
 #include "WMath.h"
 #include "HardwareSerial.h"
 #include "wiring_pulse.h"
-#include "interrupt.h"
+#include "wiring_interrupt.h"
 #include "wuart.h"
 
-#endif // __cplusplus
+#endif 
 
-
-
-
-#endif // Arduino_h
+#endif 

@@ -8,8 +8,12 @@
 
 #define TXRX_BUF_LEN                     20
 
-#define BLE_SEC_PARAM_BOND		       0			/**< Perform bonding. */
-#define BLE_SEC_PARAM_MITM                     1                        /**< Man In The Middle protection not required. */
+#define BLE_SEC_PARAM_BOND		       1						/**< Perform bonding. */
+#define BLE_SEC_PARAM_MITM                     0                        /**< Man In The Middle protection not required. */
+#define BLE_SEC_PARAM_IO_CAPABILITIES          IO_CAPS_DISPLAY_ONLY     /**< No I/O capabilities. */
+#define BLE_SEC_PARAM_OOB                      0                        /**< Out Of Band data not available. */
+#define BLE_SEC_PARAM_MIN_KEY_SIZE             7                        /**< Minimum encryption key size. */
+#define BLE_SEC_PARAM_MAX_KEY_SIZE             16
 
 static uint8_t passkey[] = "123456";
 
@@ -29,7 +33,7 @@ uint8_t txPayload[TXRX_BUF_LEN] = {0,};
 uint8_t rxPayload[TXRX_BUF_LEN] = {0,};
 
 
-GattCharacteristic  txCharacteristic (uart_tx_uuid, txPayload, 1, TXRX_BUF_LEN, GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE_WITHOUT_RESPONSE );
+GattCharacteristic  txCharacteristic (uart_tx_uuid, txPayload, 1, TXRX_BUF_LEN, GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_READ );
 
 GattCharacteristic  rxCharacteristic (uart_rx_uuid, rxPayload, 1, TXRX_BUF_LEN, GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY);
 
@@ -50,24 +54,13 @@ void error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_fil
     Serial.println("##--------------------------------------------------##");
 }
 
-void connectionCallback(Gap::Handle_t handle,                                                    \
-                        Gap::addr_type_t peerAddrType, const Gap::Address_t peerAddr,            \
-                        Gap::addr_type_t ownAddrType,  const Gap::Address_t ownAddr,             \
-                        const Gap::ConnectionParams_t *params)
+static void connectionCallback(const Gap::ConnectionCallbackParams_t *params)
 {
-    ble_gap_sec_params_t sec_params;
-    
-    Serial.println("GAP_EVT_CONNECTED");    
-    sec_params.bond    = BLE_SEC_PARAM_BOND;
-    sec_params.mitm    = BLE_SEC_PARAM_MITM;
-    sec_params.io_caps = Gap::IO_CAPS_DISPLAY_ONLY;
-    sec_params.oob     = 0;
-    sec_params.min_key_size = 16;
-    sec_params.max_key_size = 16;
-    sec_params.kdist_periph.enc = 1;     
-    sec_params.kdist_periph.id = 1;  
-    sec_params.kdist_periph.sign = 1;    
-    APP_ERROR_CHECK( sd_ble_gap_authenticate(handle, &sec_params) );
+    Serial.println("connected  ");
+    Serial.print("connect handle : ");
+    Serial.println(params->handle, HEX);
+    Serial.print("connect role : ");
+    Serial.println(params->role, DEC);   //1:peripheral, 2:cenral
 }
 
 void disconnectionCallback(Gap::Handle_t handle, Gap::DisconnectionReason_t reason)
@@ -108,7 +101,6 @@ void SecurityCompletedCB(Gap::Handle_t handle, Gap::SecurityCompletionStatus_t s
         default:
             Serial.println("Status:Other");
         break;
-    
     }
 }
 
@@ -125,7 +117,7 @@ void WrittenHandler(const GattCharacteristicWriteCBParams *Handler)
     uint16_t bytesRead, index;
 
     Serial.println("Write Handle : ");
-    if (Handler->charHandle == txCharacteristic.getValueAttribute().getHandle())
+    if (Handler->handle == txCharacteristic.getValueAttribute().getHandle())
     {
         ble.readCharacteristicValue(txCharacteristic.getValueAttribute().getHandle(), buf, &bytesRead);
         memset(txPayload, 0, TXRX_BUF_LEN);
@@ -134,7 +126,6 @@ void WrittenHandler(const GattCharacteristicWriteCBParams *Handler)
         {
             Serial.print(buf[index], HEX);
         }
-        Serial.println("");
     }
 }
 
@@ -155,7 +146,6 @@ void setup()
     // put your setup code here, to run once
     Serial.begin(9600);
     Serial.println("Start ");
-    pinMode(13, OUTPUT);
     pinMode(7, INPUT_PULLUP);
  
     app_error_handler_register(error_handler);
@@ -165,7 +155,7 @@ void setup()
     ble.onDataWritten(WrittenHandler);
     ble.onConnection(connectionCallback);
     
-    // Set security params 
+    // Set security params, if LOW, clear all bonding.
     if(digitalRead(7) == LOW)
         ble.initializeSecurity(true, BLE_SEC_PARAM_BOND, BLE_SEC_PARAM_MITM, Gap::IO_CAPS_DISPLAY_ONLY, passkey);
     else
@@ -185,7 +175,7 @@ void setup()
     // 100ms; in multiples of 0.625ms.
     ble.setAdvertisingInterval(160);
 
-    //txCharacteristic.requireSecurity(Gap::SECURITY_MODE_ENCRYPTION_NO_MITM);
+    txCharacteristic.requireSecurity(Gap::SECURITY_MODE_ENCRYPTION_NO_MITM);
     ble.addService(uartService);
   
     ble.setDeviceName((const uint8_t *)"Serial UART");
@@ -196,9 +186,6 @@ void setup()
   
     err_code = app_timer_create(&m_1s_id,APP_TIMER_MODE_REPEATED, m_1s_handle);
     APP_ERROR_CHECK(err_code);	
-  
-    //err_code = app_timer_start(m_1s_id, APP_TIMER_TICKS(1000, 0), NULL);
-    //APP_ERROR_CHECK(err_code);  
 }
 
 void loop() 

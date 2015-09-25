@@ -15,8 +15,8 @@ extern "C" {
 #define READ_CURRENT_RESOLUTION		10
 
 
-extern void analogWrite( uint32_t ulPin, uint32_t ulValue );
-extern uint32_t analogRead( uint32_t ulPin );
+extern void analogWrite( uint8_t ulPin, uint32_t ulValue );
+extern uint32_t analogRead( uint8_t ulPin );
 
 extern void analogReference( uint32_t type );
 extern void analogInpselType( uint32_t type);
@@ -30,7 +30,7 @@ extern void GPIOTE_Channel_Clean(uint8_t channel);
 
 extern int find_free_PPI_channel(int exclude_channel);
 
-extern void PPI_Off_FROM_GPIO(uint32_t pin);
+extern void PPI_releaseFromPWM(uint8_t pin);
 
 #ifdef __cplusplus
 }

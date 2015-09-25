@@ -1,3 +1,4 @@
+
 /*
     Copyright (c) 2014 RedBearLab, All rights reserved.
 
@@ -24,12 +25,31 @@
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _INTERRUPT_H_
-#define _INTERRUPT_H_
+void uart_handle(uint32_t id, SerialIrq event)
+{   /* Serial1 rx IRQ */
+    if(event == RxIrq)
+    {   
+        if(Serial1.available())
+        {
+            Serial1.write(Serial1.read()); 
+        }      
+    }
+}
 
-#include "Arduino.h"
+void setup() {
+  
+    pinMode(D13, OUTPUT);
+    Serial1.begin(9600);  
+    Serial1.attach(uart_handle);
+    Serial1.println("Serial1 IRQ Handle ");
+}
 
-extern void attachInterrupt(uint32_t pin, dynamic_handler_t event_handler, uint32_t mode);
-extern void detachInterrupt(uint32_t pin );
+void loop() {
+    // put your main code here, to run repeatedly:
+    digitalWrite(D13,HIGH);
+    delay(1000);
+    digitalWrite(D13, LOW);
+    delay(1000);
+}
 
-#endif
+

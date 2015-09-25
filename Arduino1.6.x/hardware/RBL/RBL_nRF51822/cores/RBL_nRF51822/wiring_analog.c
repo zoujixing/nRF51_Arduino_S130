@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-static uint16_t PPI_Channels_Occupied[4][2] = {255, 255, 255, 255, 255, 255, 255, 255}; 	//Save PPI channel number, each GPIOTE channel takes up two PPI channels
+static uint8_t PPI_Channels_Occupied[4][2] = {255, 255, 255, 255, 255, 255, 255, 255}; 	    //Save PPI channel number, each GPIOTE channel takes up two PPI channels
 static uint8_t GPIOTE_Channels_Occupied[4]  = {255,255,255,255}; 			  				//GPIOTE channel Status, 1--have occupied, 255--not occupied
 static uint8_t GPIOTE_Channel_for_Analog[3] = {255, 255, 255};				  				//Save the Channel number used by PWM,	
 																						   
@@ -130,11 +130,11 @@ static inline uint32_t conversion_Resolution(uint32_t value, uint32_t from, uint
 name :
 function : 
 **********************************************************************/
-uint32_t analogRead(uint32_t pin)
+uint32_t analogRead(uint8_t pin)
 {	
     uint32_t value = 0;
 	uint32_t pValue = 0;
-	uint32_t nrf_pin = 0;
+	uint8_t  nrf_pin = 0;
 	//Pin transform to nRF51822
 	nrf_pin = Pin_nRF51822_to_Arduino(pin);
 	
@@ -169,9 +169,9 @@ uint32_t analogRead(uint32_t pin)
 name :
 function : PWM update
 **********************************************************************/
-static void update_PWM_value(uint32_t ulPin, uint32_t ulValue, uint32_t PWM_channel)
+static void update_PWM_value(uint8_t ulPin, uint32_t ulValue, uint32_t PWM_channel)
 {
-	uint32_t channel;
+	uint8_t channel;
 
 	channel = GPIOTE_Channel_for_Analog[PWM_channel];
 	PWM_Channels_Value[PWM_channel] = (pow(2, PWM_RESOLUTION) - 1) - conversion_Resolution(ulValue, analogWriteResolution_bit, PWM_RESOLUTION);
@@ -220,7 +220,7 @@ int find_free_PPI_channel(int exclude_channel)
 name :  
 function : Configure PPI channels
 **********************************************************************/
-void PPI_ON_TIMER_GPIO(uint32_t gpiote_channel, NRF_TIMER_Type* Timer, uint32_t CC_channel)
+void PPI_setForPWM(uint8_t gpiote_channel, NRF_TIMER_Type* Timer, uint8_t CC_channel)
 {	
 	uint32_t err_code = NRF_SUCCESS, chen;
 
@@ -269,58 +269,12 @@ void PPI_ON_TIMER_GPIO(uint32_t gpiote_channel, NRF_TIMER_Type* Timer, uint32_t 
 			APP_ERROR_CHECK(err_code);
 		}
 	}
-
-	/*
-	if(0 == gpiote_channel)
-	{
-		NRF_PPI->CH[9].EEP = (uint32_t)( &((*Timer).EVENTS_COMPARE[CC_channel]) );
-		NRF_PPI->CH[9].TEP = (uint32_t)( &NRF_GPIOTE->TASKS_OUT[gpiote_channel] );
-		
-		NRF_PPI->CHEN |= ( 1 << 9);
-		// Save PPI channel number
-		PPI_Channels_Occupied[gpiote_channel][0] = 9;
-
-		NRF_PPI->CH[10].EEP = (uint32_t)( &((*Timer).EVENTS_COMPARE[3]) );
-		NRF_PPI->CH[10].TEP = (uint32_t)( &NRF_GPIOTE->TASKS_OUT[gpiote_channel] );
-		NRF_PPI->CHEN |= ( 1 << 10);
-		// Save PPI channel number
-		PPI_Channels_Occupied[gpiote_channel][1] = 10;		
-	}
-	else if(1 == gpiote_channel)
-	{
-		NRF_PPI->CH[11].EEP = (uint32_t)( &((*Timer).EVENTS_COMPARE[CC_channel]) );
-		NRF_PPI->CH[11].TEP = (uint32_t)( &NRF_GPIOTE->TASKS_OUT[gpiote_channel] );
-		NRF_PPI->CHEN |= ( 1 << 11);
-		// Save PPI channel number
-		PPI_Channels_Occupied[gpiote_channel][0] = 11;
-
-		NRF_PPI->CH[12].EEP = (uint32_t)( &((*Timer).EVENTS_COMPARE[3]) );
-		NRF_PPI->CH[12].TEP = (uint32_t)( &NRF_GPIOTE->TASKS_OUT[gpiote_channel] );
-		NRF_PPI->CHEN |= ( 1 << 12);
-		// Save PPI channel number
-		PPI_Channels_Occupied[gpiote_channel][1] = 12;		
-	}
-	else if(2 == gpiote_channel)
-	{
-		NRF_PPI->CH[13].EEP = (uint32_t)( &((*Timer).EVENTS_COMPARE[CC_channel]) );
-		NRF_PPI->CH[13].TEP = (uint32_t)( &NRF_GPIOTE->TASKS_OUT[gpiote_channel] );
-		NRF_PPI->CHEN |= ( 1 << 13);
-		// Save PPI channel number
-		PPI_Channels_Occupied[gpiote_channel][0] = 13;
-
-		NRF_PPI->CH[14].EEP = (uint32_t)( &((*Timer).EVENTS_COMPARE[3]) );
-		NRF_PPI->CH[14].TEP = (uint32_t)( &NRF_GPIOTE->TASKS_OUT[gpiote_channel] );
-		NRF_PPI->CHEN |= ( 1 << 14);
-		// Save PPI channel number
-		PPI_Channels_Occupied[gpiote_channel][1] = 14;		
-	}
-	*/
 }
 /**********************************************************************
 name :
 function : disconnect PPI channels
 **********************************************************************/
-void PPI_Off_FROM_GPIO(uint32_t pin)
+void PPI_releaseFromPWM(uint8_t pin)
 {
 	uint8_t channel;
 	uint32_t err_code = NRF_SUCCESS;
@@ -460,10 +414,10 @@ static void TIMER1_handler( void )
 name :
 function : 
 **********************************************************************/
-void analogWrite(uint32_t ulPin, uint32_t ulValue)
+void analogWrite(uint8_t ulPin, uint32_t ulValue)
 {	
-	uint32_t nrf_pin, max_value, err_code = NRF_SUCCESS , crystal_is_running=0;
-	uint8_t gpiote_channel;
+	uint32_t max_value, err_code = NRF_SUCCESS , crystal_is_running=0;
+	uint8_t gpiote_channel, nrf_pin;
 
 	nrf_pin = Pin_nRF51822_to_Arduino(ulPin);
 	if( nrf_pin < 31)
@@ -540,7 +494,7 @@ void analogWrite(uint32_t ulPin, uint32_t ulValue)
 				// PPI for TIMER1 and IO TASK
 				nrf_gpiote_task_config(gpiote_channel, nrf_pin, NRF_GPIOTE_POLARITY_TOGGLE, NRF_GPIOTE_INITIAL_VALUE_LOW);
 				GPIOTE_Channel_Set(gpiote_channel);
-				PPI_ON_TIMER_GPIO(gpiote_channel, NRF_TIMER1, 0);
+				PPI_setForPWM(gpiote_channel, NRF_TIMER1, 0);
 				//Save pin , channel and value
 				GPIOTE_Channel_for_Analog[0] = gpiote_channel;
 				PWM_Channels_Value[0] = (pow(2, PWM_RESOLUTION) - 1) - conversion_Resolution(ulValue, analogWriteResolution_bit, PWM_RESOLUTION);
@@ -564,7 +518,7 @@ void analogWrite(uint32_t ulPin, uint32_t ulValue)
 					}
 					nrf_gpiote_task_config(gpiote_channel, nrf_pin, NRF_GPIOTE_POLARITY_TOGGLE, NRF_GPIOTE_INITIAL_VALUE_LOW);
 					GPIOTE_Channel_Set(gpiote_channel);
-					PPI_ON_TIMER_GPIO(gpiote_channel, NRF_TIMER1, 0);
+					PPI_setForPWM(gpiote_channel, NRF_TIMER1, 0);
 					//save the pin and value
 					GPIOTE_Channel_for_Analog[0] = gpiote_channel;
 					PWM_Channels_Value[0] = (pow(2, PWM_RESOLUTION) - 1) - conversion_Resolution(ulValue, analogWriteResolution_bit, PWM_RESOLUTION);
@@ -588,7 +542,7 @@ void analogWrite(uint32_t ulPin, uint32_t ulValue)
 					
 					nrf_gpiote_task_config(gpiote_channel, nrf_pin, NRF_GPIOTE_POLARITY_TOGGLE, NRF_GPIOTE_INITIAL_VALUE_LOW);
 					GPIOTE_Channel_Set(gpiote_channel);
-					PPI_ON_TIMER_GPIO(gpiote_channel, NRF_TIMER1, 1);
+					PPI_setForPWM(gpiote_channel, NRF_TIMER1, 1);
 					//save the pin and value
 					GPIOTE_Channel_for_Analog[1] = gpiote_channel;
 					PWM_Channels_Value[1] = (pow(2, PWM_RESOLUTION) - 1) - conversion_Resolution(ulValue, analogWriteResolution_bit, PWM_RESOLUTION);
@@ -612,7 +566,7 @@ void analogWrite(uint32_t ulPin, uint32_t ulValue)
 					
 					nrf_gpiote_task_config(gpiote_channel, nrf_pin, NRF_GPIOTE_POLARITY_TOGGLE, NRF_GPIOTE_INITIAL_VALUE_LOW);
 					GPIOTE_Channel_Set(gpiote_channel);
-					PPI_ON_TIMER_GPIO(gpiote_channel, NRF_TIMER1, 2);
+					PPI_setForPWM(gpiote_channel, NRF_TIMER1, 2);
 					//save the pin and value
 					GPIOTE_Channel_for_Analog[2] = gpiote_channel;
 					PWM_Channels_Value[2] = (pow(2, PWM_RESOLUTION) - 1) - conversion_Resolution(ulValue, analogWriteResolution_bit, PWM_RESOLUTION);

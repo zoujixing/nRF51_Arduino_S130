@@ -19,21 +19,26 @@
  
 #include "ble_api/GattClient.h"
 #include "ble_api/GattCharacteristicCallbackParams.h"
-#include "nRF51DiscoveredDevice.h"
+
+#include "nRF51ServiceDiscovery.h"
 
 #include "ble.h"
 #include "ble_gattc.h"
- 
+
 class nRF51GattClient : public GattClient
 {
 public:
-    static nRF51GattClient &getInstance();
+    static nRF51GattClient &getInstance() {
+        static nRF51GattClient m_instance;
+        return m_instance;
+    }
 	 
+    static const uint16_t SRV_DISC_START_HANDLE             = 0x0001; /**< The start handle value used during service discovery. */
+    static const uint16_t SRV_DISC_END_HANDLE               = 0xFFFF; /**< The end handle value used during service discovery. */	 
 	 
-	 
-    virtual ble_error_t launchServiceDiscovery(Gap::Handle_t connectionHandle );
-	virtual ble_error_t launchServiceDiscovery(Gap::Handle_t connectionHandle, Gap::Handle_t startHandle, Gap::Handle_t endHandle );
-	
+    virtual ble_error_t launchServiceDiscovery(Gap::Handle_t connectionHandle, DiscoveredCallback_t callback);
+
+	virtual void terminateServiceDiscovery(TerminationCallback_t callback);
 	
     virtual ble_error_t read(Gap::Handle_t connHandle, GattAttribute::Handle_t attributeHandle, uint16_t offset) const {
         uint32_t rc = sd_ble_gattc_read(connHandle, attributeHandle, offset);
@@ -88,13 +93,8 @@ private:
     const nRF51GattClient& operator=(const nRF51GattClient &);	 
 
 private:
-    nRF51DiscoveredDevice discovery;
-	
+    nRF51ServiceDiscovery 	discovery;
 };
- 
- 
- 
- 
  
  #endif
  

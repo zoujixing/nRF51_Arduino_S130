@@ -22,6 +22,7 @@
 #include "blecommon.h"
 #include "Gap.h"
 #include "GattServer.h"
+#include "GattClient.h"
 #include "GapScanningParams.h"
 #include "BLEDeviceInstanceBase.h"
 
@@ -44,6 +45,18 @@ public:
      */
     ble_error_t shutdown(void);
 
+
+    /*
+     * Accessors to GATT Client. Please refer to GattClient.h. All GATTClient related
+     * functionality requires going through this accessor.
+     */
+    const GattClient& gattClient() const {
+        return transport->getGattClient();
+    }
+	
+    GattClient& gattClient() {
+        return transport->getGattClient();
+    }
     /* GAP specific APIs */
 public:
     /**
@@ -171,7 +184,7 @@ public:
      * Note: This should be followed by a call to setAdvertisingPayload() or
      * startAdvertising() before the update takes effect.
      */
-    void        clearAdvertisingPayload(void);
+    void clearAdvertisingPayload(void);
 
     /**
      * Accumulate an AD structure in the advertising payload. Please note that
@@ -362,15 +375,7 @@ public:
      * Used to setup a callback for GAP disconnection.
      */
     void onDisconnection(Gap::DisconnectionEventCallback_t disconnectionCallback);
-
-    /**
-     * Append to a chain of callbacks to be invoked upon disconnection; these
-     * callbacks receive no context and are therefore different from the
-     * onDisconnection callback.
-     */
-    //template<typename T>
-    //void addToDisconnectionCallChain(T *tptr, void (T::*mptr)(void));
-
+	
     /**
      * Add a callback for the GATT event DATA_SENT (which is triggered when
      * updates are sent out by GATT in the form of notifications).
@@ -921,13 +926,7 @@ BLEDevice::onDisconnection(Gap::DisconnectionEventCallback_t disconnectionCallba
 {
     transport->getGap().setOnDisconnection(disconnectionCallback);
 }
-/*
-template<typename T>
-inline void
-BLEDevice::addToDisconnectionCallChain(T *tptr, void (T::*mptr)(void)) {
-    transport->getGap().addToDisconnectionCallChain(tptr, mptr);
-}
-*/
+
 inline void
 BLEDevice::onDataSent(void (*callback)(unsigned count)) {
     transport->getGattServer().setOnDataSent(callback);

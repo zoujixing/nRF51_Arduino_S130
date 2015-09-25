@@ -23,7 +23,7 @@ extern uint8_t UART0_ReadRXDate();
 extern uint8_t UART0_CheckRXError();
 extern void UART0_WaitTXFinish();
 
-extern void UART0_Start(uint32_t BaudRate, uint32_t rx_pin, uint32_t tx_pin );
+extern void UART0_Start(uint32_t BaudRate, uint8_t rx_pin, uint8_t tx_pin );
 extern void UART0_Stop();
 extern void UART0_TX(uint8_t dat);
 extern uint8_t UART0_RX();

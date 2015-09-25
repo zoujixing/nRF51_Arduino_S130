@@ -8,11 +8,11 @@ extern "C" {
 #endif
 
 
-extern void pinMode( uint32_t ulPin, uint32_t ulMode );
+extern void pinMode( uint8_t ulPin, uint8_t ulMode );
  
-extern void digitalWrite( uint32_t ulPin, uint32_t ulVal );
+extern void digitalWrite( uint8_t ulPin, uint32_t ulVal );
 
-extern int digitalRead( uint32_t ulPin );
+extern int digitalRead( uint8_t ulPin );
 
 #ifdef __cplusplus
 }

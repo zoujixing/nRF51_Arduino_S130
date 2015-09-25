@@ -3,9 +3,10 @@
 #include "Arduino.h"
 
 
-uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout )
-{
-	uint32_t width = 0, nrf_pin; 
+uint32_t pulseIn( uint8_t pin, uint8_t state, uint32_t timeout )
+{	
+	uint8_t nrf_pin;
+	uint32_t width = 0; 
 	
 	nrf_pin = Pin_nRF51822_to_Arduino(pin);
 	if(nrf_pin < 31)

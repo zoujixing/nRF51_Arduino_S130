@@ -30,8 +30,8 @@ GattCharacteristic *uartChars[] = {&txCharacteristic, &rxCharacteristic};
 
 GattService         uartService(uart_base_uuid, uartChars, sizeof(uartChars) / sizeof(GattCharacteristic *));
 
-// Error handle
-static void error_handle(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name)
+
+void error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name)
 {
     Serial.println("##---------------------Error Code-------------------##");
     Serial.print("The file name : ");
@@ -43,37 +43,13 @@ static void error_handle(uint32_t error_code, uint32_t line_num, const uint8_t *
     Serial.println("##--------------------------------------------------##");
 }
 
-// GAP call back handle
-static void connectionCallBack(Gap::Handle_t handle,                                                    \
-                        Gap::addr_type_t peerAddrType, const Gap::Address_t peerAddr,            \
-                        Gap::addr_type_t ownAddrType,  const Gap::Address_t ownAddr,             \
-                        const Gap::ConnectionParams_t *params)
+static void connectCallBack(const Gap::ConnectionCallbackParams_t *params)
 {
-    Serial.println("GAP_EVT_CONNECTED");    
-    
-    Serial.print("PeerAddr type is : ");
-    Serial.println(peerAddrType, HEX);
-    Serial.print("PeerAddr is : ");
-    for(uint8_t index=0; index<6; index++)
-    {
-        Serial.print(peerAddr[index], HEX);
-        Serial.print(" ");
-    }
-    Serial.println(" ");
-    
-    Serial.print("OwnAddr type is : ");
-    Serial.println(ownAddrType, HEX);
-    Serial.print("OwnAddr is : ");
-    for(uint8_t index=0; index<6; index++)
-    {
-        Serial.print(ownAddr[index], HEX);
-        Serial.print(" ");
-    }  
-    Serial.println(" ");
-    Serial.print("The min Conn_interval : ");
-    Serial.println(params->minConnectionInterval, DEC);
-    Serial.print("The max Conn_interval : ");
-    Serial.println(params->maxConnectionInterval, DEC);    
+    Serial.println("connected  ");
+    Serial.print("connect handle : ");
+    Serial.println(params->handle, HEX);
+    Serial.print("connect role : ");
+    Serial.println(params->role, DEC);   //1:peripheral, 2:cenral
 }
 
 static void disconnectionCallBack(Gap::Handle_t handle, Gap::DisconnectionReason_t reason)
@@ -95,7 +71,7 @@ void writtenHandle(const GattCharacteristicWriteCBParams *Handler)
     uint16_t bytesRead, index;
 
     Serial.println("Write Handle : ");
-    if (Handler->charHandle == txCharacteristic.getValueAttribute().getHandle())
+    if (Handler->handle == txCharacteristic.getValueAttribute().getHandle())
     {
         ble.readCharacteristicValue(txCharacteristic.getValueAttribute().getHandle(), buf, &bytesRead);
         memset(txPayload, 0, TXRX_BUF_LEN);
@@ -126,26 +102,23 @@ void setup() {
     Serial.begin(9600);
     pinMode(13, OUTPUT);
     
-    app_error_handler_register(error_handle);
-  
+    app_error_handler_register(error_handler);
+
     Serial.println("Start ");
     ble.init();
-    ble.onConnection(connectionCallBack);
+
+    ble.onConnection(connectCallBack);
     ble.onDisconnection(disconnectionCallBack);
     ble.onDataWritten(writtenHandle);
     ble.onTimeout(timeoutCallBack);
       
     // setup adv_data and srp_data
-    ble.accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED);
+    ble.accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED | GapAdvertisingData::LE_GENERAL_DISCOVERABLE);
+    
     ble.accumulateAdvertisingPayload(GapAdvertisingData::SHORTENED_LOCAL_NAME,
                                      (const uint8_t *)"Biscuit", sizeof("Biscuit") - 1);
     ble.accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LIST_128BIT_SERVICE_IDS,
-                                     (const uint8_t *)uart_base_uuid_rev, sizeof(uart_base_uuid));
-    
-    ble.accumulateScanResponse(GapAdvertisingData::SHORTENED_LOCAL_NAME, 
-                              (const uint8_t *)"hello", sizeof("hello") - 1);                        
-    ble.accumulateScanResponse(GapAdvertisingData::COMPLETE_LIST_128BIT_SERVICE_IDS, 
-                              (const uint8_t *)uart_base_uuid_rev, sizeof(uart_base_uuid_rev));                                 
+                                     (const uint8_t *)uart_base_uuid_rev, sizeof(uart_base_uuid));                               
     // add service
     ble.addService(uartService);
     // set device name
@@ -159,7 +132,7 @@ void setup() {
     // set adv_interval, 100ms in multiples of 0.625ms.
     ble.setAdvertisingInterval(160);
     // set adv_timeout, in seconds
-    ble.setAdvertisingTimeout(180);
+    ble.setAdvertisingTimeout(0);
     // ger BLE stack version
     Serial.println( ble.getVersion() );
     // start advertising

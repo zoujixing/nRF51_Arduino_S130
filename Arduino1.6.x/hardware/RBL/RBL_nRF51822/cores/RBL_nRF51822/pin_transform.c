@@ -33,9 +33,9 @@ extern "C" {
 name :
 function : 
 **********************************************************************/
-uint32_t Pin_nRF51822_to_Arduino(uint32_t pin)
+uint8_t Pin_nRF51822_to_Arduino(uint8_t pin)
 {
-	uint32_t return_pin=0x000000FF;
+	uint8_t return_pin=0xFF;
 	
 #ifdef RBL_NRF51822	
 	switch(pin)

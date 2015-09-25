@@ -8,7 +8,7 @@
 #endif
 
 
-extern uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout ); //timeout = 1000000L
+extern uint32_t pulseIn( uint8_t pin, uint8_t state, uint32_t timeout ); //timeout = 1000000L
 
 
 #ifdef __cplusplus

@@ -8,16 +8,17 @@ name=RedBearLab Boards
 compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
 
 # Compile s files options
-compiler.s.cmd=arm-none-eabi-gcc
-compiler.s.flags=-c -g -assembler-with-cpp
+compiler.s.cmd=arm-none-eabi-as
+compiler.s.flags=-mcpu=cortex-m0 -mthumb 
+#compiler.s.flags=-c -g -assembler-with-cpp
 
 # Compile c files options
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -Dprintf=iprintf -DBLE_STACK_SUPPORT_REQD -DDEBUG_NRF_USER -DNRF51 -DBOARD_PCA10028
+compiler.c.flags=-c -g -Os -w -std=gnu99 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -Dprintf=iprintf -DBLE_STACK_SUPPORT_REQD -DDEBUG_NRF_USER -DNRF51 
 
 # Compile cpp files options
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-c -g -Os -w -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -Dprintf=iprintf -DBLE_STACK_SUPPORT_REQD -DDEBUG_NRF_USER -DNRF51 -DBOARD_PCA10028 
+compiler.cpp.flags=-c -g -Os -w -std=gnu++98 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -Dprintf=iprintf -DBLE_STACK_SUPPORT_REQD -DDEBUG_NRF_USER -DNRF51  
 
 # Create archives options
 compiler.ar.cmd=arm-none-eabi-ar
@@ -44,7 +45,7 @@ compiler.size.cmd=arm-none-eabi-size
 # ------------------------
 
 ## Compile S files
-recipe.s.o.pattern="{compiler.path}{compiler.s.cmd}" {source_file} -o "{object_file}"
+recipe.s.o.pattern="{compiler.path}{compiler.s.cmd}" {compiler.s.flags} "{source_file}" -o "{object_file}"
 
 ## Compile c files
 recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -D{software}={runtime.ide.version} {build.extra_flags} {includes} {build.variant_system_include} "{source_file}" -o "{object_file}"
@@ -62,8 +63,12 @@ recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.f
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.elf2bin.cmd}" {compiler.elf2bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
 
 ## Create hex
-recipe.objcopy.hex1.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flagx} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}_test.hex" 
+recipe.objcopy.hex1.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flagx} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}_OTA.hex" 
 recipe.objcopy.hex2.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} "{build.path}/{build.project_name}.bin" "{build.path}/{build.project_name}.hex" 
+
+## Save hex
+recipe.output.tmp_file={build.project_name}_OTA.hex
+recipe.output.save_file={build.project_name}_OTA.{build.variant}.hex
 
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"

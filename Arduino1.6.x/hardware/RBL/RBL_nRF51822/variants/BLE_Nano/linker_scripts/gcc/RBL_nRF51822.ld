@@ -138,4 +138,8 @@ SECTIONS
     __StackLimit = __StackTop - SIZEOF(.stack_dummy);
     PROVIDE(_sstack = __StackLimit);
     PROVIDE(_estack = __StackTop);
+	
+	/* Check if data + heap + stack exceeds RAM limit 
+	ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack") 
+	*/
 }

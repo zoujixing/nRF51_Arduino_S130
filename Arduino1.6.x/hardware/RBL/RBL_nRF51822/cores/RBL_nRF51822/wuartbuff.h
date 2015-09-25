@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#define SERIAL_BUFFER_MAX_SIZE 64
+#define SERIAL_BUFFER_MAX_SIZE 24
 
 
 class Buffer

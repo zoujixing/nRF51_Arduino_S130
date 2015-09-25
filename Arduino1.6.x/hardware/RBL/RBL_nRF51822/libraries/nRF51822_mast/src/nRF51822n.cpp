@@ -51,25 +51,9 @@ nRF51822n::~nRF51822n(void)
 
 const char *nRF51822n::getVersion(void)
 {
-    static char versionString[32];
-    static bool versionFetched = false;
+    static char versionString[12];
 
-    if (!versionFetched) {
-        ble_version_t version;
-        if ((sd_ble_version_get(&version) == NRF_SUCCESS) && (version.company_id == 0x0059)) {
-            switch (version.version_number) {
-                case 0x07:
-                    snprintf(versionString, sizeof(versionString), "Nordic BLE4.1 fw:%04x", version.subversion_number);
-                    break;
-                default:
-                    snprintf(versionString, sizeof(versionString), "Nordic (spec unknown) fw:%04x", version.subversion_number);
-                    break;
-            }
-            versionFetched = true;
-        } else {
-            strncpy(versionString, "unknown", sizeof(versionString));
-        }
-    }
+	strncpy(versionString, "RedBear_S130", sizeof(versionString));
 
     return versionString;
 }

@@ -1,4 +1,3 @@
-
 /*
     Copyright (c) 2014 RedBearLab, All rights reserved.
 
@@ -25,21 +24,26 @@
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _PIN_TRANSFORM_H
-#define _PIN_TRANSFORM_H
+#ifndef WIRING_INTERRUPT_H_
+#define WIRING_INTERRUPT_H_
 
 #include "Arduino.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+typedef void (*irqHandle_t)(void);
 
-extern uint8_t Pin_nRF51822_to_Arduino(uint8_t pin);
-extern void LinkInterrupt( uint8_t IRQn, dynamic_handler_t handler);
-extern void UnlinkInterrupt( uint8_t IRQn );
+typedef enum {
+    IRQ_NONE,
+    IRQ_RISE,
+    IRQ_FALL
+} gpio_irq_event;
 
-#ifdef __cplusplus
-}
-#endif
+typedef struct{
+	irqHandle_t riseHandle;
+	irqHandle_t fallHandle;
+}pinHandle_t;
+
+extern void attachInterrupt(uint8_t pin, irqHandle_t handle, uint8_t mode);
+extern void detachInterrupt(uint8_t pin );
+
 
 #endif

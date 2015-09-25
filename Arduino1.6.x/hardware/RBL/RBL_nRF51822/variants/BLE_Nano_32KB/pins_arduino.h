@@ -30,8 +30,8 @@
 #define SDA  D2
 #define SCL  D3
 
-#define DEFAULT_RX_PIN 11  //do not need to pin_transform, default is P0_11
-#define DERAULT_TX_PIN 9   //do not need to pin_transform, default is P0_09
+#define DEFAULT_RX_PIN D0  
+#define DERAULT_TX_PIN D1  
 
 #define TWI_SDA SDA
 #define TWI_SCL SCL

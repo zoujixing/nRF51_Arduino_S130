@@ -34,6 +34,7 @@
 #include "ble_api/GapEvents.h"
 #include "nRF51Gap.h"
 #include "nRF51GattServer.h"
+#include "nRF51GattClient.h"
 #include "nordic_sdk/device_manager.h"
 
 #include "ble_hci.h"
@@ -194,5 +195,6 @@ static void btle_handler(ble_evt_t *p_ble_evt)
     }
 
     nRF51GattServer::getInstance().hwCallback(p_ble_evt);
+	nRF51GattClient::getInstance().hwCallback(p_ble_evt);
 }
 

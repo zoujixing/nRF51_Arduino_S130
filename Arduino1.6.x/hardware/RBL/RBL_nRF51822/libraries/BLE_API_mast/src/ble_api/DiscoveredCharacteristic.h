@@ -30,7 +30,7 @@
 #include "UUID.h"
 #include "Gap.h"
 #include "GattAttribute.h"
-#include "GattClient.h"
+//#include "GattClient.h"
 
 /**
  * Structure for holding information about the service and the characteristics
@@ -38,7 +38,7 @@
  */
 class DiscoveredCharacteristic {
 public:
-    struct Properties_t {
+    typedef struct {
         uint8_t _broadcast       :1; /**< Broadcasting of the value permitted. */
         uint8_t _read            :1; /**< Reading the value permitted. */
         uint8_t _writeWoResp     :1; /**< Writing the value with Write Command permitted. */
@@ -46,21 +46,54 @@ public:
         uint8_t _notify          :1; /**< Notications of the value permitted. */
         uint8_t _indicate        :1; /**< Indications of the value permitted. */
         uint8_t _authSignedWrite :1; /**< Writing the value with Signed Write Command permitted. */
+	}Properties_t;
 
-    public:
-        bool broadcast(void)       const {return _broadcast;      }
-        bool read(void)            const {return _read;           }
-        bool writeWoResp(void)     const {return _writeWoResp;    }
-        bool write(void)           const {return _write;          }
-        bool notify(void)          const {return _notify;         }
-        bool indicate(void)        const {return _indicate;       }
-        bool authSignedWrite(void) const {return _authSignedWrite;}
+	void setup(Gap::Handle_t            connectionHandleIn,
+               Properties_t    			propsIn,
+               GattAttribute::Handle_t  declHandleIn,
+               GattAttribute::Handle_t  valueHandleIn){
+				   
+		connHandle  = connectionHandleIn;
+		declHandle  = declHandleIn;
+		valueHandle = valueHandleIn;
 
-    private:
-        operator uint8_t()  const; /* disallow implicit conversion into an integer */
-        operator unsigned() const; /* disallow implicit conversion into an integer */
-    };
+		props._broadcast       = propsIn._broadcast;
+		props._read            = propsIn._read;
+		props._writeWoResp     = propsIn._writeWoResp;
+		props._write           = propsIn._write;
+		props._notify          = propsIn._notify;
+		props._indicate        = propsIn._indicate;
+		props._authSignedWrite = propsIn._authSignedWrite;
+	}
+	
+	void setup(Gap::Handle_t            connectionHandleIn,
+               UUID::ShortUUIDBytes_t   uuidIn,
+               Properties_t    			propsIn,
+               GattAttribute::Handle_t  declHandleIn,
+               GattAttribute::Handle_t  valueHandleIn){
+				   
+		connHandle  = connectionHandleIn;
+		uuid        = uuidIn;
+		declHandle  = declHandleIn;
+		valueHandle = valueHandleIn;
 
+		props._broadcast       = propsIn._broadcast;
+		props._read            = propsIn._read;
+		props._writeWoResp     = propsIn._writeWoResp;
+		props._write           = propsIn._write;
+		props._notify          = propsIn._notify;
+		props._indicate        = propsIn._indicate;
+		props._authSignedWrite = propsIn._authSignedWrite;
+	}
+	
+	void setDescHandle(GattAttribute::Handle_t descHandleIn){
+		descHandle=descHandleIn;
+	}
+	
+	void setCCCDHandle(GattAttribute::Handle_t CCCDHandleIn) {
+		cccdHandle=CCCDHandleIn;
+	}
+	
     /**
      * Structure for holding information about the service and the characteristics
      * found during the discovery process.
@@ -175,34 +208,30 @@ public:
     }
 	
 	const GattAttribute::Handle_t& getDescHandle(void) const {
-        return description_handle;
+        return descHandle;
     }
     const GattAttribute::Handle_t& getCCCDHndle(void) const {
-        return cccd_handle;
+        return cccdHandle;
     }
 
 public:
-    DiscoveredCharacteristic() : gattc(NULL),
-                                 uuid(UUID::ShortUUIDBytes_t(0)),
+    DiscoveredCharacteristic() : uuid(UUID::ShortUUIDBytes_t(0)),
                                  props(),
                                  declHandle(GattAttribute::INVALID_HANDLE),
                                  valueHandle(GattAttribute::INVALID_HANDLE),
-                                 description_handle(GattAttribute::INVALID_HANDLE),
-                                 cccd_handle(GattAttribute::INVALID_HANDLE)
+                                 descHandle(GattAttribute::INVALID_HANDLE),
+                                 cccdHandle(GattAttribute::INVALID_HANDLE)
 	{
         /* empty */
     }
-
-protected:
-    GattClient              *gattc;
 
 protected:
     UUID                     uuid;
     Properties_t             props;
     GattAttribute::Handle_t  declHandle;
     GattAttribute::Handle_t  valueHandle;
-	GattAttribute::Handle_t  description_handle;
-	GattAttribute::Handle_t  cccd_handle;
+	GattAttribute::Handle_t  descHandle;
+	GattAttribute::Handle_t  cccdHandle;
 
     Gap::Handle_t            connHandle;
 };

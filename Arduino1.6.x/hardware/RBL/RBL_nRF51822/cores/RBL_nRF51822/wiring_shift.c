@@ -8,7 +8,7 @@ extern "C"{
 name :
 function : 
 **********************************************************************/
-uint32_t shiftIn( uint32_t ulDataPin, uint32_t ulClockPin, uint32_t ulBitOrder )
+uint8_t shiftIn( uint8_t ulDataPin, uint8_t ulClockPin, uint8_t ulBitOrder )
 {
 	uint8_t value = 0 ;
 	uint8_t i ;
@@ -35,7 +35,7 @@ uint32_t shiftIn( uint32_t ulDataPin, uint32_t ulClockPin, uint32_t ulBitOrder )
 name :
 function : 
 **********************************************************************/
-void shiftOut( uint32_t ulDataPin, uint32_t ulClockPin, uint32_t ulBitOrder, uint32_t ulVal )
+void shiftOut( uint8_t ulDataPin, uint8_t ulClockPin, uint8_t ulBitOrder, uint32_t ulVal )
 {
 	uint8_t i ;
 

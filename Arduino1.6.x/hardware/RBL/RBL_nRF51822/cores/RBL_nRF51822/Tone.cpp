@@ -9,18 +9,19 @@ declared
 static uint8_t tone_channel=255;
 static uint8_t pin_state = 0;
 static uint8_t finish_flag = 0;
+static uint8_t tone_pin;
 static uint32_t inter_count;
-static uint32_t tone_pin;
+
 
 static void TIMER2_handler( void );
 /**********************************************************************
 name :
 function : 
 **********************************************************************/
-void tone(uint32_t pin, uint16_t freq, uint32_t duration)
+void tone(uint8_t pin, uint16_t freq, uint32_t duration)
 {
-	uint32_t i,prescaler, compare, nrf_pin, err_code = NRF_SUCCESS;
-	uint8_t channel, softdevice_enabled;
+	uint32_t i,prescaler, compare,  err_code = NRF_SUCCESS;
+	uint8_t channel, softdevice_enabled, nrf_pin;
 	
 	channel = GPIOTE_Channel_Find();
 	if(channel == 255)
@@ -108,7 +109,7 @@ void tone(uint32_t pin, uint16_t freq, uint32_t duration)
 name :
 function : 
 **********************************************************************/
-void tone(uint32_t pin, uint16_t freq)
+void tone(uint8_t pin, uint16_t freq)
 {
 	tone(pin, freq, 0);
 }
@@ -116,10 +117,10 @@ void tone(uint32_t pin, uint16_t freq)
 name :
 function : 
 **********************************************************************/
-void noTone(uint32_t pin)
+void noTone(uint8_t pin)
 {	
-	uint8_t softdevice_enabled;
-	uint32_t nrf_pin, err_code = NRF_SUCCESS;
+	uint8_t softdevice_enabled, nrf_pin;
+	uint32_t err_code = NRF_SUCCESS;
 	
 	nrf_pin = Pin_nRF51822_to_Arduino(pin);
 	if(nrf_pin < 31)

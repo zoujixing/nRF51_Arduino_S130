@@ -22,9 +22,10 @@
 #include "ble_api/UUID.h"
 
 #include "ble_api/GattClient.h"
-#include "ble_api/GattClientEvents.h"
+//#include "ble_api/GattClientEvents.h"
 #include "ble_api/DiscoveredCharacteristic.h"
 #include "ble_api/DiscoveredService.h"
+#include "ble_api/DiscoveredDevice.h"
 
 
 #include "ble_service/Service_Battery.h"
