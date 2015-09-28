@@ -129,7 +129,7 @@ void UARTClass::irq_handler()
 name :
 function : 
 **********************************************************************/
-void UARTClass::irq_attach( uart_callback_t UART_CallBackFunc )
+void UARTClass::attach( uart_callback_t UART_CallBackFunc )
 {
     UART_CallBack = UART_CallBackFunc;
 }

@@ -56,7 +56,7 @@ void rtc_timer_init()
 {	
 	uint32_t err_code;
 	//8 timer application, not use scheduler.
-	APP_TIMER_INIT(0, 6, 5);  
+	APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE);  
 	
 	//m_rtc_start_timer_id task do nothing, just make sure RTC1 is running.
 	err_code = app_timer_create(&m_rtc_start_timer_id,

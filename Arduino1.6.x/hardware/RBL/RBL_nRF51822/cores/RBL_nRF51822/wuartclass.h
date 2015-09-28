@@ -27,7 +27,7 @@ class UARTClass : public HardwareSerial
 		
 		void irq_handler( void );
 		
-        void irq_attach( uart_callback_t UART_CallBackFunc );
+        void attach( uart_callback_t UART_CallBackFunc );
         
 #if defined __GNUC__ /* GCC CS3 */
 		using Print::write ; // pull in write(str) and write(buf, size) from Print

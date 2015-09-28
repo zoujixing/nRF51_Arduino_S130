@@ -28,6 +28,8 @@ OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
 OUTPUT_ARCH(arm)
 SEARCH_DIR(.)
 
+stack_size = 512;
+
 /* Memory Spaces Definitions */
 MEMORY
 {
@@ -135,11 +137,10 @@ SECTIONS
     /* Set stack top to end of ram, and stack limit move down by
      * size of stack_dummy section */
     __StackTop = ORIGIN(ram) + LENGTH(ram);
-    __StackLimit = __StackTop - SIZEOF(.stack_dummy);
+    __StackLimit = __StackTop - stack_size;
     PROVIDE(_sstack = __StackLimit);
     PROVIDE(_estack = __StackTop);
 	
-	/* Check if data + heap + stack exceeds RAM limit 
-	ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack") 
-	*/
+	/* Check if data + heap + stack exceeds RAM limit */
+	ASSERT(__StackLimit >= _end, "region RAM overflowed with stack") 
 }
