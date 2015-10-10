@@ -33,7 +33,8 @@
 
 /**********************************************************************
 name :
-function : return: 1--SUCCESS, 0--FAIL
+function : 
+return: 0--SUCCESS, 1--FAIL
 **********************************************************************/
 bool TwoWire::twi_master_clear_bus(void)
 {
@@ -65,12 +66,12 @@ bool TwoWire::twi_master_clear_bus(void)
 	
 	if( ( (NRF_GPIO->IN >> SCL_Pin) & 0X1UL ) && ( (NRF_GPIO->IN >> SDA_Pin) & 0x1UL ) )
 	{
-		bus_clear = 1;
+		bus_clear = 0;
 	}
 	else
 	{
 		uint_fast8_t index;
-		bus_clear = 0;
+		bus_clear = 1;
 		for( index=18; index--;)
 		{
 			NRF_GPIO->OUTCLR = ( 1 << SCL_Pin );
@@ -80,7 +81,7 @@ bool TwoWire::twi_master_clear_bus(void)
 			
 			if( (NRF_GPIO->IN >> SDA_Pin) & 0x1UL == 1 )
 			{
-				bus_clear = 1;
+				bus_clear = 0;
 				break;
 			}
 			
@@ -97,7 +98,8 @@ bool TwoWire::twi_master_clear_bus(void)
 
 /**********************************************************************
 name :
-function : return: 1--SUCCESS, 0--FAIL
+function : 
+return: 0--SUCCESS, 1--FAIL
 **********************************************************************/
 bool TwoWire::twi_master_init(void)
 {	
@@ -144,7 +146,8 @@ bool TwoWire::twi_master_init(void)
 }
 /**********************************************************************
 name :
-function : return: 1--SUCCESS, 0--FAIL
+function : 
+return: 0--SUCCESS, 1--FAIL
 **********************************************************************/
 uint8_t TwoWire::twi_master_write(uint8_t *data, uint8_t data_length, uint8_t issue_stop_condition)
 {
@@ -152,7 +155,7 @@ uint8_t TwoWire::twi_master_write(uint8_t *data, uint8_t data_length, uint8_t is
 	
 	if(data_length == 0)
 	{
-		return 0;
+		return 1;
 	}
 	twi->TXD = *data++;
 	twi->TASKS_STARTTX = 1;
@@ -170,7 +173,7 @@ uint8_t TwoWire::twi_master_write(uint8_t *data, uint8_t data_length, uint8_t is
 			twi->ENABLE		= TWI_ENABLE_ENABLE_Enabled << TWI_ENABLE_ENABLE_Pos;
 			
 			twi_master_init();
-			return 0;
+			return 1;
 		}
 		twi->EVENTS_TXDSENT = 0;
 		if( --data_length == 0)
@@ -189,11 +192,12 @@ uint8_t TwoWire::twi_master_write(uint8_t *data, uint8_t data_length, uint8_t is
 			//do nothing, wait for stop sequence is sent
 		}		
 	}
-	return 1;
+	return 0;
 }
 /**********************************************************************
 name :
-function : return: 1--SUCCESS, 0--FAIL
+function : 
+return: 0--SUCCESS, 1--FAIL
 **********************************************************************/
 uint8_t TwoWire::twi_master_read(uint8_t *data, uint8_t data_length, uint8_t issue_stop_condition)
 {	
@@ -204,7 +208,7 @@ uint8_t TwoWire::twi_master_read(uint8_t *data, uint8_t data_length, uint8_t iss
 	APP_ERROR_CHECK(err_code);
 	if( 0 == data_length )
 	{
-		return 0;
+		return 1;
 	}
 	else if( 1== data_length )//&& issue_stop_condition == 1)
 	{
@@ -260,7 +264,7 @@ uint8_t TwoWire::twi_master_read(uint8_t *data, uint8_t data_length, uint8_t iss
 	
 			twi_master_init();          
           
-			return 0;			
+			return 1;			
 		}
 		
 		twi->EVENTS_RXDREADY = 0;
@@ -304,7 +308,7 @@ uint8_t TwoWire::twi_master_read(uint8_t *data, uint8_t data_length, uint8_t iss
 		err_code = sd_ppi_channel_enable_clr( 1 << 7 );
 		APP_ERROR_CHECK(err_code);
 	}
-	return 1;
+	return 0;
 }
 
 /**********************************************************************
@@ -378,13 +382,14 @@ void TwoWire::beginTransmission( int address )
 }
 /**********************************************************************
 name :
-function : return: 1--SUCCESS, 0--FAIL
+function : 
+return: 0--SUCCESS, 1--FAIL
 **********************************************************************/
 uint8_t TwoWire::endTransmission( uint8_t stop)
 {
-	uint8_t twi_flag=0;
+	uint8_t twi_flag=1;
 	
-	if(TX_BufferLength > 0 && twi_master_clear_bus() )
+	if(TX_BufferLength > 0 && !twi_master_clear_bus() )
 	{
 		twi->ADDRESS = Transfer_Addr;
 		twi_flag = twi_master_write(TX_Buffer, TX_BufferLength, stop);
@@ -397,7 +402,8 @@ uint8_t TwoWire::endTransmission( uint8_t stop)
 }
 /**********************************************************************
 name :
-function : return: 1--SUCCESS, 0--FAIL
+function : 
+return: 0--SUCCESS, 1--FAIL
 **********************************************************************/
 uint8_t TwoWire::endTransmission(void)
 {
@@ -409,7 +415,8 @@ uint8_t TwoWire::endTransmission(void)
 }
 /**********************************************************************
 name :
-function : return: 1--SUCCESS, 0--FAIL
+function : 
+return: 0--SUCCESS, 1--FAIL
 **********************************************************************/
 size_t TwoWire::write(uint8_t data)
 {
@@ -417,19 +424,20 @@ size_t TwoWire::write(uint8_t data)
 	{	
 		if(TX_BufferLength >= BUFF_MAX_LENGTH)
 		{
-			return 0;
+			return 1;
 		}
 		TX_Buffer[TX_BufferLength++] = data;
-		return 1;
+		return 0;
 	}
 	else
 	{
-		return 0;
+		return 1;
 	}
 }
 /**********************************************************************
 name :
-function : return: 0--FAIL, else--the length of data that to be written
+function : 
+return: the length of data that to be written
 **********************************************************************/
 size_t TwoWire::write(const uint8_t *data, size_t quantity )
 {
@@ -453,24 +461,39 @@ size_t TwoWire::write(const uint8_t *data, size_t quantity )
 }
 /**********************************************************************
 name :
-function : return:0--FAIL, 1--SUCCESS
+function : 
+return: the length of data that to read
 **********************************************************************/
 uint8_t TwoWire::requestFrom(uint8_t addr, uint8_t quantity, uint8_t stop)
 {
+	uint8_t flag=1;
 	uint8_t read_num = 0;
 	
 	if(quantity > BUFF_MAX_LENGTH)
 	{   
 		quantity = BUFF_MAX_LENGTH;
+		read_num = BUFF_MAX_LENGTH
 	}
-	if(quantity > 0 && twi_master_clear_bus() )
+	else
+	{
+		read_num = quantity;
+	}
+	if(quantity > 0 && !twi_master_clear_bus() )
 	{   
 		twi->ADDRESS = addr;
-		read_num = twi_master_read(RX_Buffer, quantity, stop);
+		flag = twi_master_read(RX_Buffer, quantity, stop);
 	}
-	RX_BufferIndex = 0;
-	RX_BufferLength = quantity;
-	
+
+	if(flag != 0)
+	{
+		read_num = 0;
+	}
+	else 
+	{
+		RX_BufferIndex = 0;
+		RX_BufferLength = quantity;
+	}
+
 	return read_num;
 }
 /**********************************************************************
