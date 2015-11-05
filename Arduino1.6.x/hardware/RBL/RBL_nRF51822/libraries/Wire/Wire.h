@@ -47,8 +47,8 @@
 #define TWI_FREQUENCY_FREQUENCY_K250  0x04000000UL
 #define TWI_FREQUENCY_FREQUENCY_K400  0x06680000UL
 
-#define PPI_CHANNEL_FOR_TWI0          6
-#define PPI_CHANNEL_FOR_TWI1          7
+#define PPI_CHANNEL_FOR_TWI0          7
+#define PPI_CHANNEL_FOR_TWI1          6
 
 #define TWI0_SCL_PIN                  TWI_SCL
 #define TWI0_SDA_PIN                  TWI_SDA
@@ -124,7 +124,7 @@ public :
 };
 
 extern TwoWire Wire;
-extern TwoWire Wire1;
+//extern TwoWire Wire1;
 
 #endif
 

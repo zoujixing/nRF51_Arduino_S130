@@ -576,7 +576,7 @@ void TwoWire::flush(void)
 
 
 TwoWire Wire = TwoWire(NRF_TWI0);
-TwoWire Wire1 = TwoWire(NRF_TWI1);
+//TwoWire Wire1 = TwoWire(NRF_TWI1);
 
 
 
