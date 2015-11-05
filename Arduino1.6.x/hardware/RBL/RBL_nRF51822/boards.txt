@@ -10,7 +10,7 @@ nRF51822.upload.disable_flushing=true
 nRF51822.upload.use_1200bps_touch=true
 nRF51822.upload.wait_for_upload_port=false
 
-nRF51822.tool.avrdude.path={runtime.tools.avrdude.path};
+nRF51822.tool.avrdude.path={runtime.tools.avrdude.path}
 nRF51822.build.mcu=cortex-m0
 nRF51822.build.f_cpu=16000000
 nRF51822.build.usb_product="Arduino RBL"
