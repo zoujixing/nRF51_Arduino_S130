@@ -43,7 +43,7 @@ void error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_fil
     Serial.println("##--------------------------------------------------##");
 }
 
-static void connectCallBack(const Gap::ConnectionCallbackParams_t *params)
+void connectCallBack(const Gap::ConnectionCallbackParams_t *params)
 {
     Serial.println("connected  ");
     Serial.print("connect handle : ");
@@ -52,14 +52,14 @@ static void connectCallBack(const Gap::ConnectionCallbackParams_t *params)
     Serial.println(params->role, DEC);   //1:peripheral, 2:cenral
 }
 
-static void disconnectionCallBack(Gap::Handle_t handle, Gap::DisconnectionReason_t reason)
+void disconnectionCallBack(Gap::Handle_t handle, Gap::DisconnectionReason_t reason)
 {
     Serial.println("Disconnected ");
     Serial.println("Restart advertising ");
     ble.startAdvertising();
 }
 
-static void timeoutCallBack()
+void timeoutCallBack()
 {
     Serial.println("Advertising Timeout ");
 }

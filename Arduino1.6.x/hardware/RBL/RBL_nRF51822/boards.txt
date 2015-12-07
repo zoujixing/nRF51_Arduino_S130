@@ -17,9 +17,8 @@ nRF51822.build.usb_product="Arduino RBL"
 nRF51822.build.board = RBL_nRF51822
 nRF51822.build.core=RBL_nRF51822
 nRF51822.build.variant=RBL_nRF51822
-nRF51822.build.extra_flags=-mthumb
 nRF51822.build.ldscript=linker_scripts/gcc/RBL_nRF51822.ld
-nRF51822.build.variant_system_include= "-I{build.system.path}/CMSIS/CMSIS/Include" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/device" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/driver_nrf/hal" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/libraries/util" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/softdevice/s130"   
+nRF51822.build.variant_system_include= "-I{build.system.path}/CMSIS/CMSIS/Include" "-I{runtime.platform.path}/nrf51822_SDK/device" "-I{runtime.platform.path}/nrf51822_SDK/driver_nrf/hal" "-I{runtime.platform.path}/nrf51822_SDK/libraries/util" "-I{runtime.platform.path}/nrf51822_SDK/softdevice/s130"   
 
 ##############################################################
 
@@ -41,14 +40,13 @@ nRF51822_NANO.build.usb_product="Arduino RBL"
 nRF51822_NANO.build.board = RBL_nRF51822
 nRF51822_NANO.build.core=RBL_nRF51822
 nRF51822_NANO.build.variant=BLE_Nano
-nRF51822_NANO.build.extra_flags=-mthumb
 nRF51822_NANO.build.tool_path={runtime.tools.arm-none-eabi-gcc.path}
 nRF51822_NANO.build.ldscript=linker_scripts/gcc/RBL_nRF51822.ld
-nRF51822_NANO.build.variant_system_include= "-I{build.system.path}/CMSIS/CMSIS/Include" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/device" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/driver_nrf/hal" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/libraries/util" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/softdevice/s130"   
+nRF51822_NANO.build.variant_system_include= "-I{build.system.path}/CMSIS/CMSIS/Include" "-I{runtime.platform.path}/nrf51822_SDK/device" "-I{runtime.platform.path}/nrf51822_SDK/driver_nrf/hal" "-I{runtime.platform.path}/nrf51822_SDK/libraries/util" "-I{runtime.platform.path}/nrf51822_SDK/softdevice/s130"   
 
 ##############################################################
 
-nRF51822_32KB.name=RBL nRF51822 32KB
+nRF51822_32KB.name=RBL nRF51822(32KB RAM)
 
 nRF51822_32KB.upload.tool=avrdude
 nRF51822_32KB.upload.protocol=avr109
@@ -66,13 +64,12 @@ nRF51822_32KB.build.usb_product="Arduino RBL"
 nRF51822_32KB.build.board = RBL_nRF51822
 nRF51822_32KB.build.core=RBL_nRF51822
 nRF51822_32KB.build.variant=RBL_nRF51822_32KB
-nRF51822_32KB.build.extra_flags=-mthumb
 nRF51822_32KB.build.ldscript=linker_scripts/gcc/RBL_nRF51822.ld
-nRF51822_32KB.build.variant_system_include= "-I{build.system.path}/CMSIS/CMSIS/Include" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/device" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/driver_nrf/hal" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/libraries/util" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/softdevice/s130"   
+nRF51822_32KB.build.variant_system_include= "-I{build.system.path}/CMSIS/CMSIS/Include" "-I{runtime.platform.path}/nrf51822_SDK/device" "-I{runtime.platform.path}/nrf51822_SDK/driver_nrf/hal" "-I{runtime.platform.path}/nrf51822_SDK/libraries/util" "-I{runtime.platform.path}/nrf51822_SDK/softdevice/s130"   
 
 ##############################################################
 
-nRF51822_NANO_32KB.name=BLE Nano 32KB
+nRF51822_NANO_32KB.name=BLE Nano(32KB RAM)
 
 nRF51822_NANO_32KB.upload.tool=avrdude
 nRF51822_NANO_32KB.upload.protocol=avr109
@@ -90,9 +87,8 @@ nRF51822_NANO_32KB.build.usb_product="Arduino RBL"
 nRF51822_NANO_32KB.build.board = RBL_nRF51822
 nRF51822_NANO_32KB.build.core=RBL_nRF51822
 nRF51822_NANO_32KB.build.variant=BLE_Nano_32KB
-nRF51822_NANO_32KB.build.extra_flags=-mthumb
 nRF51822_NANO_32KB.build.tool_path={runtime.tools.arm-none-eabi-gcc.path}
 nRF51822_NANO_32KB.build.ldscript=linker_scripts/gcc/RBL_nRF51822.ld
-nRF51822_NANO_32KB.build.variant_system_include= "-I{build.system.path}/CMSIS/CMSIS/Include" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/device" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/driver_nrf/hal" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/libraries/util" "-I{runtime.hardware.path}/RBL_nRF51822/nrf51822_SDK/softdevice/s130"   
+nRF51822_NANO_32KB.build.variant_system_include= "-I{build.system.path}/CMSIS/CMSIS/Include" "-I{runtime.platform.path}/nrf51822_SDK/device" "-I{runtime.platform.path}/nrf51822_SDK/driver_nrf/hal" "-I{runtime.platform.path}/nrf51822_SDK/libraries/util" "-I{runtime.platform.path}/nrf51822_SDK/softdevice/s130"   
 
 ##############################################################

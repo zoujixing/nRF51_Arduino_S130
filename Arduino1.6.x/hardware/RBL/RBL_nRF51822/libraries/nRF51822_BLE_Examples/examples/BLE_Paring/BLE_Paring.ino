@@ -50,7 +50,7 @@ void error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_fil
     Serial.println("##--------------------------------------------------##");
 }
 
-static void connectionCallback(const Gap::ConnectionCallbackParams_t *params)
+void connectionCallback(const Gap::ConnectionCallbackParams_t *params)
 {
     ble_gap_sec_params_t sec_params;
   

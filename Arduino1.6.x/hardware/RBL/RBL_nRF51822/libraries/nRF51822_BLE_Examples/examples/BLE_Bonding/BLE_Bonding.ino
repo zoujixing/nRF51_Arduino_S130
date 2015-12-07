@@ -54,7 +54,7 @@ void error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_fil
     Serial.println("##--------------------------------------------------##");
 }
 
-static void connectionCallback(const Gap::ConnectionCallbackParams_t *params)
+void connectionCallback(const Gap::ConnectionCallbackParams_t *params)
 {
     Serial.println("connected  ");
     Serial.print("connect handle : ");

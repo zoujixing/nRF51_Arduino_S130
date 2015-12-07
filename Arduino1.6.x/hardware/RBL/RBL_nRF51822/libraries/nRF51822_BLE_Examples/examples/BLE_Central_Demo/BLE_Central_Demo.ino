@@ -28,51 +28,51 @@ uint32_t ble_advdata_decode(uint8_t type, uint8_t advdata_len, uint8_t *p_advdat
     return NRF_ERROR_NOT_FOUND;
 }
 
- void scanCallBack(const Gap::AdvertisementCallbackParams_t *params)
- { 
-     Serial.println("Check");
-     Serial.println("Scan Device CallBack Handle ");
-     
-     Serial.print("  The peerAddr : ");
-     for(uint8_t index=0; index<6; index++)
-     {
-         Serial.print(params->peerAddr[index], HEX);
-         Serial.print(" ");  
-     }
-     Serial.println(" ");  
-     
-     Serial.print("  The Rssi : ");
-     Serial.println(params->rssi, DEC);
-     
-     uint8_t len;
-     uint8_t adv_name[31];
-     if( NRF_SUCCESS == ble_advdata_decode(BLE_GAP_AD_TYPE_SHORT_LOCAL_NAME, params->advertisingDataLen, (uint8_t *)params->advertisingData, &len, adv_name) )
-     {
-         Serial.print("  The length of Short Local Name : ");
-         Serial.println(len, HEX);
-         Serial.print("  The Short Local Name is        : ");
-         Serial.println((const char *)adv_name);
-         if(0x00 == memcmp(adv_name, "Biscuit", min(7, len)))
-         {
-              ble.stopScan();
-              ble.connect(params->peerAddr, Gap::ADDR_TYPE_RANDOM_STATIC, NULL, NULL);         
-         }
-     }
-     else if( NRF_SUCCESS == ble_advdata_decode(BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME, params->advertisingDataLen, (uint8_t *)params->advertisingData, &len, adv_name) )
-     {
-         Serial.print("  The length of Complete Local Name : ");
-         Serial.println(len, HEX);
-         Serial.print("  The Complete Local Name is        : ");
-         Serial.println((const char *)adv_name);
-         if(0x00 == memcmp(adv_name, "HRM1", min(4, len)))
-         {
-              ble.stopScan();
-              ble.connect(params->peerAddr, Gap::ADDR_TYPE_RANDOM_STATIC, NULL, NULL);         
-         }
-     }
-     Serial.println(" ");  
-     Serial.println(" ");  
- }
+void scanCallBack(const Gap::AdvertisementCallbackParams_t *params)
+{ 
+    Serial.println("Check");
+    Serial.println("Scan Device CallBack Handle ");
+
+    Serial.print("  The peerAddr : ");
+    for(uint8_t index=0; index<6; index++)
+    {
+        Serial.print(params->peerAddr[index], HEX);
+        Serial.print(" ");  
+    }
+    Serial.println(" ");  
+
+    Serial.print("  The Rssi : ");
+    Serial.println(params->rssi, DEC);
+
+    uint8_t len;
+    uint8_t adv_name[31];
+    if( NRF_SUCCESS == ble_advdata_decode(BLE_GAP_AD_TYPE_SHORT_LOCAL_NAME, params->advertisingDataLen, (uint8_t *)params->advertisingData, &len, adv_name) )
+    {
+        Serial.print("  The length of Short Local Name : ");
+        Serial.println(len, HEX);
+        Serial.print("  The Short Local Name is        : ");
+        Serial.println((const char *)adv_name);
+        if(0x00 == memcmp(adv_name, "Biscuit", min(7, len)))
+        {
+          ble.stopScan();
+          ble.connect(params->peerAddr, Gap::ADDR_TYPE_RANDOM_STATIC, NULL, NULL);         
+        }
+    }
+    else if( NRF_SUCCESS == ble_advdata_decode(BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME, params->advertisingDataLen, (uint8_t *)params->advertisingData, &len, adv_name) )
+    {
+        Serial.print("  The length of Complete Local Name : ");
+        Serial.println(len, HEX);
+        Serial.print("  The Complete Local Name is        : ");
+        Serial.println((const char *)adv_name);
+        if(0x00 == memcmp(adv_name, "HRM1", min(4, len)))
+        {
+          ble.stopScan();
+          ble.connect(params->peerAddr, Gap::ADDR_TYPE_RANDOM_STATIC, NULL, NULL);         
+        }
+    }
+    Serial.println(" ");  
+    Serial.println(" ");  
+}
 
 void discoveredCallback(const DiscoveredDevice *device)
 {
@@ -127,8 +127,8 @@ void terminateCallback(uint8_t reason)
     Serial.println(reason, HEX);
 }
  
- // GAP call back handle
-static void connectionCallBack(const Gap::ConnectionCallbackParams_t *params)
+// GAP call back handle
+void connectionCallBack(const Gap::ConnectionCallbackParams_t *params)
 {
     Serial.println("GAP_EVT_CONNECTED");    
     Serial.print("The conn handle : ");
@@ -148,17 +148,17 @@ static void connectionCallBack(const Gap::ConnectionCallbackParams_t *params)
     ble.gattClient().launchServiceDiscovery(params->handle, discoveredCallback);
 }
 
-static void disconnectionCallBack(Gap::Handle_t handle, Gap::DisconnectionReason_t reason)
+void disconnectionCallBack(Gap::Handle_t handle, Gap::DisconnectionReason_t reason)
 {
     Serial.println("Disconnected ");
 }
 
-static void onDataWrite(const GattCharacteristicWriteCBParams *params)
+void onDataWrite(const GattCharacteristicWriteCBParams *params)
 {
     Serial.println("GattClient write call back ");    
 }
 
-static void onDataRead(const GattCharacteristicReadCBParams *params)
+void onDataRead(const GattCharacteristicReadCBParams *params)
 {
     Serial.println("GattClient read call back ");      
     Serial.print("The handle : ");
@@ -175,7 +175,7 @@ static void onDataRead(const GattCharacteristicReadCBParams *params)
     Serial.println("");
 }
 
-static void hvxCallBack(const GattCharacteristicHVXCallbackParams *params)
+void hvxCallBack(const GattCharacteristicHVXCallbackParams *params)
 {
     Serial.println("GattClient notify call back \r\n");  
     Serial.print("The len : ");
