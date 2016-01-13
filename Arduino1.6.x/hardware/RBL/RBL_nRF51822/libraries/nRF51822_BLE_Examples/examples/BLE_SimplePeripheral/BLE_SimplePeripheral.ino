@@ -1,6 +1,6 @@
 
-#include <nRF51822_API.h>
 #include <BLE_API.h>
+#include <nRF51822_API.h>
 
 #define BLE_UUID_TXRX_SERVICE            0x0000 /**< The UUID of the Nordic UART Service. */
 #define BLE_UUID_TX_CHARACTERISTIC       0x0002 /**< The UUID of the TX Characteristic. */

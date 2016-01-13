@@ -42,9 +42,9 @@ void setup() {
     Serial.begin(9600);  
     Serial.println("External Interrupter Demo ");
     
-    attachInterrupt(D6, handle_irq1, RISING);
-    attachInterrupt(D7, handle_irq2, FALLING);
-    attachInterrupt(D8, handle_irq3, CHANGE);
+    attachInterrupt(D5, handle_irq1, RISING);
+    attachInterrupt(D6, handle_irq2, FALLING);
+    attachInterrupt(D7, handle_irq3, CHANGE);
 }
 
 void loop() {

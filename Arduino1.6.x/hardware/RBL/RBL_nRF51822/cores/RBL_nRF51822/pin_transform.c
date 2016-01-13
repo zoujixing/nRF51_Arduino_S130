@@ -91,12 +91,12 @@ uint8_t Pin_nRF51822_to_Arduino(uint8_t pin)
 
 		case 13 : return_pin = 19;break;	//D13/LED
 		
-		case 14 : return_pin = 1;break;		//A0
-		case 15 : return_pin = 2;break;		//A1
-		case 16 : return_pin = 3;break;		//A2
-		case 17 : return_pin = 4;break;		//A3
-		case 18 : return_pin = 5;break;		//A4
-		case 19 : return_pin = 6;break;		//A5
+		case 8  : return_pin = 1;break;		//A0
+		case 9  : return_pin = 2;break;		//A1
+		case 10 : return_pin = 3;break;		//A2
+		case 11 : return_pin = 4;break;		//A3
+		case 12 : return_pin = 5;break;		//A4
+		case 14 : return_pin = 6;break;		//A5
 
 		default : break;		
 	}

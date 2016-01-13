@@ -124,7 +124,9 @@ SECTIONS
     } > ram
 
     . = ALIGN(4);
+    end = . ;
     _end = . ;
+    __end__ = . ;
 
     /* .stack_dummy section doesn't contains any symbols. It is only
        used for linker to calculate size of stack sections, and assign

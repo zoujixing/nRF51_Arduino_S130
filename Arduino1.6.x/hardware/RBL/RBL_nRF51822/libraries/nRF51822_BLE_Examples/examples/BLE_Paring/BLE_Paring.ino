@@ -1,6 +1,6 @@
 
-#include <nRF51822_API.h>
 #include <BLE_API.h>
+#include <nRF51822_API.h>
 
 #define BLE_UUID_TXRX_SERVICE            0x0000 /**< The UUID of the Nordic UART Service. */
 #define BLE_UUID_TX_CHARACTERISTIC       0x0002 /**< The UUID of the TX Characteristic. */
@@ -8,8 +8,8 @@
 
 #define TXRX_BUF_LEN                     20
 
-#define BLE_SEC_PARAM_BOND		       0			/**< Perform bonding. */
-#define BLE_SEC_PARAM_MITM                     1                        /**< Man In The Middle protection not required. */
+#define BLE_SEC_PARAM_BOND               0            /**< Perform bonding. */
+#define BLE_SEC_PARAM_MITM               1            /**< Man In The Middle protection not required. */
 
 static uint8_t passkey[] = "123456";
 
@@ -196,7 +196,7 @@ void setup()
     Serial.println("start advertising ");
   
     err_code = app_timer_create(&m_1s_id,APP_TIMER_MODE_REPEATED, m_1s_handle);
-    APP_ERROR_CHECK(err_code);	
+    APP_ERROR_CHECK(err_code);    
 }
 
 void loop() 
