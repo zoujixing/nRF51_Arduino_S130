@@ -1,6 +1,6 @@
 
-#include <nRF51822_API.h>
 #include <BLE_API.h>
+#include <nRF51822_API.h>
 
 BLEDevice ble;
 //DiscoveredDevice HRM;
@@ -43,7 +43,7 @@ void scanCallBack(const Gap::AdvertisementCallbackParams_t *params)
 
     Serial.print("  The Rssi : ");
     Serial.println(params->rssi, DEC);
-
+    
     uint8_t len;
     uint8_t adv_name[31];
     if( NRF_SUCCESS == ble_advdata_decode(BLE_GAP_AD_TYPE_SHORT_LOCAL_NAME, params->advertisingDataLen, (uint8_t *)params->advertisingData, &len, adv_name) )

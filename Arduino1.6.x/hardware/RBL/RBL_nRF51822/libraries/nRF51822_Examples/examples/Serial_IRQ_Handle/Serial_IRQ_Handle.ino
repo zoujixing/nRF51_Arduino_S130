@@ -26,7 +26,7 @@
 */
 
 void uart_handle()
-{   /* Serial1 rx IRQ */
+{   /* Serial rx IRQ */
     if(Serial.available())
     {
         Serial.write(Serial.read()); 

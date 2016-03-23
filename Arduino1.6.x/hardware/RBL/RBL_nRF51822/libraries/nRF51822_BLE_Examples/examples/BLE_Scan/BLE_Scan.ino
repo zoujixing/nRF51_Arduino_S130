@@ -1,8 +1,8 @@
 
-#include <nRF51822_API.h>
 #include <BLE_API.h>
+#include <nRF51822_API.h>
 
- BLEDevice      ble;
+BLEDevice      ble;
  
 uint32_t ble_advdata_decode(uint8_t type, uint8_t advdata_len, uint8_t *p_advdata, uint8_t *len, uint8_t *p_field_data)
 {

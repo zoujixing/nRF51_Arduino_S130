@@ -1,6 +1,6 @@
 
-#include <nRF51822_API.h>
 #include <BLE_API.h>
+#include <nRF51822_API.h>
 
 #define BLE_UUID_TXRX_SERVICE            0x0000 /**< The UUID of the Nordic UART Service. */
 #define BLE_UUID_TX_CHARACTERISTIC       0x0002 /**< The UUID of the TX Characteristic. */
@@ -8,13 +8,13 @@
 
 #define TXRX_BUF_LEN                     20
 
-#define BLE_SEC_PARAM_BOND		       1						/**< Perform bonding. */
-#define BLE_SEC_PARAM_MITM                     0                        /**< Man In The Middle protection not required. */
-#define BLE_SEC_PARAM_IO_CAPABILITIES          IO_CAPS_DISPLAY_ONLY     /**< No I/O capabilities. */
-#define BLE_SEC_PARAM_OOB                      0                        /**< Out Of Band data not available. */
-#define BLE_SEC_PARAM_MIN_KEY_SIZE             7                        /**< Minimum encryption key size. */
-#define BLE_SEC_PARAM_MAX_KEY_SIZE             16
-
+#define BLE_SEC_PARAM_BOND               1                        /**< Perform bonding. */
+#define BLE_SEC_PARAM_MITM               0                        /**< Man In The Middle protection not required. */
+#define BLE_SEC_PARAM_IO_CAPABILITIES    IO_CAPS_DISPLAY_ONLY     /**< No I/O capabilities. */
+#define BLE_SEC_PARAM_OOB                0                        /**< Out Of Band data not available. */
+#define BLE_SEC_PARAM_MIN_KEY_SIZE       7                        /**< Minimum encryption key size. */
+#define BLE_SEC_PARAM_MAX_KEY_SIZE       16
+    
 static uint8_t passkey[] = "123456";
 
 
@@ -185,7 +185,7 @@ void setup()
     Serial.println("start advertising ");
   
     err_code = app_timer_create(&m_1s_id,APP_TIMER_MODE_REPEATED, m_1s_handle);
-    APP_ERROR_CHECK(err_code);	
+    APP_ERROR_CHECK(err_code);    
 }
 
 void loop() 
